@@ -11,10 +11,10 @@ export default class CategoriaDAO{
         try{
             const conexao = await conectar();
             const sql = `
-                CREAT TABLE IF NOT EXISTS categoria(
-                    codigo INT NOT NULL AUTO _INCREMENT,
-                    descricao VARCHAR(50) NOT NULL,
-                    CONSTRAINT pk_categoria PRIMARY KEY(codigo)
+                CREATE TABLE IF NOT EXISTS categoria(
+                    cat_codigo INT NOT NULL AUTO_INCREMENT,
+                    cat_descricao VARCHAR(50) NOT NULL,
+                    cat_CONSTRAINT pk_categoria PRIMARY KEY(codigo)
                 );
             `;
             await conexao.execute(sql);
@@ -28,7 +28,7 @@ export default class CategoriaDAO{
     async gravar(categoria){
         if(categoria instanceof Categoria){
             const conexao = conectar();
-            const sql = `INSERT INTO categoria(descricao) VALUES ?`;
+            const sql = `INSERT INTO categoria(cat_descricao) VALUES ?`;
             const parametros = [categoria.descricao];
             categoria.codigo[0].insertId;
             await conexao.execute(sql,parametros);
@@ -38,7 +38,7 @@ export default class CategoriaDAO{
     async editar(categoria){
         if(categoria instanceof Categoria){
             const conexao = conectar();
-            const sql = `UPDATE categoria SET descricao = ?`;
+            const sql = `UPDATE categoria SET cat_descricao = ?`;
             const parametros = [categoria.descricao];
             await conexao.execute(sql,parametros);
             await conexao.release();
@@ -46,7 +46,7 @@ export default class CategoriaDAO{
     }
     async excluir(categoria){
         const conexao = conectar();
-        const sql = `DELETE FROM categoria WHERE descricao = ?`;
+        const sql = `DELETE FROM categoria WHERE cat_codigo = ?`;
         const parametros = [categoria.descricao];
         await conexao.execute(sql,parametros);
         await conexao.release();
@@ -59,8 +59,8 @@ export default class CategoriaDAO{
         await conexao.release();
         let listaCategoria = []
         for(const registro of registros){ //PARA CADA REGISTRO RECUPERADO CADA UM SE TORNA UMA OARTE DESSE SISTEMA
-            const categoria = new Categoria(registro['codigo']);
-                                            registro['descricao'];
+            const categoria = new Categoria(registro['cat_codigo']);
+                                            registro['cat_descricao'];
             listaCategoria.push(categoria);
 
         }

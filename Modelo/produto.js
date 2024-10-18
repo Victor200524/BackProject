@@ -68,8 +68,6 @@ export default class Produto{
             this.#categoria = novaCategoria;
     }
 
-
-
     //construtor (criador de um produto)
     constructor(codigo=0, descricao="",precoCusto=0,precoVenda=0,qtdEstoque=0,urlImagem="", dataValidade="", categoria={}){
         this.#codigo=codigo;

@@ -8,6 +8,10 @@
 import express from 'express';
 import rotaProduto from './Rotas/rotaProdutos.js';
 import cors from 'cors';
+import dotenv from 'dotenv';
+
+// AQUI VAMOS CARREGAS AS VARIAVEIS DE AMBIENTE A APRTIR DO ARQUIVO .ENV LOCALIZADO NA NA RAIZ DO PROJETO
+dotenv.config()
 
 
 const host = "0.0.0.0"; //todas as placas de rede do computador que está executando a aplicação

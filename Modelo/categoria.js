@@ -54,8 +54,8 @@ export default class Categoria {
         await catDAO.excluir(this);
     }
 
-    async consultar(){
+    async consultar(termo){
         const catDAO = new CategoriaDAO();
-        return await catDAO.consultar(this);
+        return await catDAO.consultar(termo);
     }
 }

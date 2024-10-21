@@ -1,4 +1,5 @@
 //É a classe responsável por traduzir requisições HTTP e produzir respostas HTTP
+import Categoria from "../Modelo/categoria.js";
 import Produto from "../Modelo/produto.js";
 
 export default class ProdutoCtrl{
@@ -14,15 +15,15 @@ export default class ProdutoCtrl{
             const qtdEstoque = requisicao.body.qtdEstoque;
             const urlImagem  = requisicao.body.urlImagem;
             const dataValidade = requisicao.body.dataValidade;
+            const categoria = requisicao.body.categoria.codigo;
             //pseudo validação
-            if (descricao && precoCusto > 0 &&
-                precoVenda > 0 && qtdEstoque >= 0 &&
-                urlImagem && dataValidade)
+            if (descricao && precoCusto > 0 && precoVenda > 0 && qtdEstoque >= 0 && urlImagem && dataValidade && categoria.codigo > 0)
             {
-                //gravar o produto
+                //gravar o produto e codigo
+                const categ = new Categoria(categoria.codigo);
                 const produto = new Produto(0,
                     descricao, precoCusto, precoVenda,
-                    qtdEstoque,urlImagem,dataValidade);
+                    qtdEstoque,urlImagem,dataValidade,categ);
                 
                 produto.incluir()
                 .then(()=>{
@@ -74,39 +75,57 @@ export default class ProdutoCtrl{
             const qtdEstoque = requisicao.body.qtdEstoque;
             const urlImagem  = requisicao.body.urlImagem;
             const dataValidade = requisicao.body.dataValidade;
-            //pseudo validação
-            if (codigo > 0 && descricao && precoCusto > 0 &&
-                precoVenda > 0 && qtdEstoque >= 0 &&
-                urlImagem && dataValidade)
-            {
-                //alterar o produto
-                const produto = new Produto(codigo,
-                    descricao, precoCusto, precoVenda,
-                    qtdEstoque,urlImagem,dataValidade);
-                produto.alterar()
-                .then(()=>{
-                    resposta.status(200).json({
-                        "status":true,
-                        "mensagem":"Produto alterado com sucesso!",
-                    });
-                })
-                .catch((erro)=>{
-                    resposta.status(500).json({
-                        "status":false,
-                        "mensagem":"Não foi possível alterar o produto: " + erro.message
-                    });
-                });
-            }
-            else
-            {
-                resposta.status(400).json(
+            const categoria = requisicao.body.categoria.codigo;
+            //validação de regra de negócio
+            const categValid = new Categoria(categoria.codigo);
+            categValid.consultar(categoria.codigo).then((lista)=>{
+                if(lista.length > 0){
+                    //pseudo validação
+                    if (codigo > 0 && descricao && precoCusto > 0 &&
+                        precoVenda > 0 && qtdEstoque >= 0 &&
+                        urlImagem && dataValidade)
                     {
-                        "status":false,
-                        "mensagem":"Informe corretamente todos os dados de um produto conforme documentação da API."
+                        //alterar o produto
+                        const categ = new Categoria(categoria.codigo)
+                        const produto = new Produto(codigo,
+                            descricao, precoCusto, precoVenda,
+                            qtdEstoque,urlImagem,dataValidade,categ);
+                        produto.alterar()
+                        .then(()=>{
+                            resposta.status(200).json({
+                                "status":true,
+                                "mensagem":"Produto alterado com sucesso!",
+                            });
+                        })
+                        .catch((erro)=>{
+                            resposta.status(500).json({
+                                "status":false,
+                                "mensagem":"Não foi possível alterar o produto: " + erro.message
+                            });
+                        });
                     }
-                );
-            }
-
+                    else
+                    {
+                        resposta.status(400).json(
+                            {
+                                "status":false,
+                                "mensagem":"Informe corretamente todos os dados de um produto conforme documentação da API."
+                            }
+                        );
+                    }     
+                } 
+                else{
+                    resposta.status(400).json({
+                        "status": false,
+                        "mensagem": "A categoria informada não existe!"
+                    });
+                }
+            }).catch((erro)=>{
+                resposta.status(500).json({
+                    "status": false,
+                    "mensagem": "Não foi possivel validar a categoria: " + erro.message
+                })
+            });
         }
         else
         {
@@ -189,7 +208,7 @@ export default class ProdutoCtrl{
                 resposta.status(500).json(
                     {
                         "status":false,
-                        "mensagem":"Erro ao consultar produtos"    
+                        "mensagem":"Erro ao consultar produtos: " + erro.message    
                     }
                 );
             });

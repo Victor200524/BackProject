@@ -1,4 +1,4 @@
-import conectar from "./Conexao";
+import conectar from "./Conexao.js";
 import Categoria from "../Modelo/categoria.js";
 
 export default class CategoriaDAO{
@@ -14,7 +14,7 @@ export default class CategoriaDAO{
                 CREATE TABLE IF NOT EXISTS categoria(
                     cat_codigo INT NOT NULL AUTO_INCREMENT,
                     cat_descricao VARCHAR(50) NOT NULL,
-                    cat_CONSTRAINT pk_categoria PRIMARY KEY(codigo)
+                    CONSTRAINT pk_categoria PRIMARY KEY(cat_codigo)
                 );
             `;
             await conexao.execute(sql);
@@ -51,9 +51,19 @@ export default class CategoriaDAO{
         await conexao.execute(sql,parametros);
         await conexao.release();
     }
-    async consultar(){
+    async consultar(termo){ 
+        let sql = "";
+        let parametros = [];
+        // aqui estou verificando se aquela categoria realmente existe
+        if(isNaN(parseInt(termo))){
+            sql = "SELECT * FROM categoria WHERE cat_descricao = ? ORDER BY cat_descricao";
+            parametros.push("%"+termo+"%");
+        }
+        else{
+            sql = "SELECT * FROM categoria ORDER BY cat_codigo = ? ORDER BY cat_descricao";
+            parametros.push(termo);
+        }
         const conexao = await conectar();
-        const sql = "SELECT * FROM categoria ORDER BY descricao";
         await conexao.queery(sql);
         [registros, campos] = await conexao.query(sql); // O METODO QUERY RETORNA UMA LISTA
         await conexao.release();

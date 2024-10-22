@@ -13,7 +13,7 @@ export default class ProdutoDAO {
             const conexao = await conectar(); //retorna uma conexão
             const sql = `
              CREATE TABLE IF NOT EXISTS produto(
-                pk_codigo INT NOT NULL AUTO_INCREMENT,
+                prod_codigo INT NOT NULL AUTO_INCREMENT,
                 prod_descricao VARCHAR(200) NOT NULL,
                 prod_precoCusto DECIMAL(10,2) NOT NULL,
                 prod_precoVenda DECIMAL(10,2) NOT NULL,
@@ -22,7 +22,7 @@ export default class ProdutoDAO {
                 prod_dataValidade DATE NOT NULL,
                 fk_codigo_cat INT NOT NULL,
                 CONSTRAINT pk_produto PRIMARY KEY(prod_codigo),
-                CONSTRAINT fk_categoria FOREIGN KEY(fk_codigo_cat) REFERENCES categoria(codigo)
+                CONSTRAINT fk_categoria FOREIGN KEY(fk_codigo_cat) REFERENCES categoria(cat_codigo)
             );
         `;
             await conexao.execute(sql);
@@ -79,7 +79,7 @@ export default class ProdutoDAO {
         let parametros = [];
         if (isNaN(parseInt(termo))) { // produto p -> esse p é o apelido da tabela chamada produto
             sql = `SELECT * FROM produto  
-                    INNER JOIN categoria ON prod_fk_codigo_cat = cat_codigo 
+                    INNER JOIN categoria ON fk_codigo_cat = cat_codigo 
                     WHERE prod_descricao LIKE ?`;
             parametros = ['%' + termo + '%'];
         }

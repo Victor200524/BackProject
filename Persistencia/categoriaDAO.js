@@ -67,8 +67,9 @@ export default class CategoriaDAO{
         const [registros, campos] = await conexao.query(sql,parametros); // O METODO QUERY RETORNA UMA LISTA
         let listaCategoria = [];
         for(const registro of registros){ //PARA CADA REGISTRO RECUPERADO CADA UM SE TORNA UMA OARTE DESSE SISTEMA
-            const categoria = new Categoria(registro['cat_codigo']);
-                                            registro['cat_descricao'];
+            const categoria = new Categoria(registro['cat_codigo'],
+                                            registro['cat_descricao']
+                                        );
             listaCategoria.push(categoria);
 
         }

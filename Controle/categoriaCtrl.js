@@ -169,10 +169,10 @@ export default class CategoriaCtrl{
                 resposta.status(500).json(
                     {
                         "status":false,
-                        "mensagem":"Erro ao consultar categorias"    
+                        "mensagem":"Erro ao consultar categorias " + erro.message   
                     }
                 );
-            });
+                });
 
         }
         else

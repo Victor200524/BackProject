@@ -56,18 +56,16 @@ export default class CategoriaDAO{
         let parametros = [];
         // aqui estou verificando se aquela categoria realmente existe
         if(isNaN(parseInt(termo))){
-            sql = "SELECT * FROM categoria WHERE cat_descricao = ? ORDER BY cat_descricao";
+            sql = "SELECT * FROM categoria WHERE cat_descricao LIKE ? ORDER BY cat_descricao";
             parametros.push("%"+termo+"%");
         }
         else{
-            sql = "SELECT * FROM categoria ORDER BY cat_codigo = ? ORDER BY cat_descricao";
+            sql = "SELECT * FROM categoria WHERE cat_codigo LIKE ? ORDER BY cat_descricao";
             parametros.push(termo);
         }
         const conexao = await conectar();
-        await conexao.queery(sql);
-        [registros, campos] = await conexao.query(sql); // O METODO QUERY RETORNA UMA LISTA
-        await conexao.release();
-        let listaCategoria = []
+        const [registros, campos] = await conexao.query(sql,parametros); // O METODO QUERY RETORNA UMA LISTA
+        let listaCategoria = [];
         for(const registro of registros){ //PARA CADA REGISTRO RECUPERADO CADA UM SE TORNA UMA OARTE DESSE SISTEMA
             const categoria = new Categoria(registro['cat_codigo']);
                                             registro['cat_descricao'];

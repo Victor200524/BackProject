@@ -79,15 +79,15 @@ export default class ProdutoDAO {
         let sql = "";
         let parametros = [];
         if (isNaN(parseInt(termo))) { // produto p -> esse p é o apelido da tabela chamada produto
-            sql = `SELECT * FROM produto  
-                    INNER JOIN categoria c ON fk_codigo_cat = c_codigo 
+            sql = `SELECT * FROM produto p
+                    INNER JOIN categoria c ON p.fk_codigo_cat = c.codigo 
                     WHERE prod_descricao LIKE ?`;
             parametros = ['%' + termo + '%'];
         }
         else {
             sql = `SELECT * FROM produto p 
-                    INNER JOIN categoria c ON prod_fk_codigo_cat = c_codigo
-                    WHERE prod_codigo LIKE ?`;
+                    INNER JOIN categoria c ON p.fk_codigo_cat = c.codigo
+                    WHERE prod_codigo = ?`;
             parametros = [termo];
         }
         const [linhas, campos] = await conexao.execute(sql, parametros);

@@ -85,7 +85,7 @@ export default class ProdutoDAO {
             parametros = ['%' + termo + '%'];
         }
         else {
-            sql = `SELECT * FROM produto p 
+            sql = `SELECT * FROM produto 
                     INNER JOIN categoria ON prod_fk_codigo_cat = cat_codigo
                     WHERE prod_codigo LIKE ?`;
             parametros = [termo];
@@ -93,7 +93,7 @@ export default class ProdutoDAO {
         const [linhas, campos] = await conexao.execute(sql, parametros);
         let listaProdutos = [];
         for (const linha of linhas) {
-            const categoria = new Categoria(linha['fk_codigo_cat']);
+            const categoria = new Categoria(linha['cat_codigo'],linha["cat_descricao"]);
             const produto = new Produto(
                 linha['prod_codigo'],
                 linha['prod_descricao'],

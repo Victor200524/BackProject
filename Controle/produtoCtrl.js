@@ -83,13 +83,12 @@ export default class ProdutoCtrl{
                     //pseudo validação
                     if (codigo > 0 && descricao && precoCusto > 0 &&
                         precoVenda > 0 && qtdEstoque >= 0 &&
-                        urlImagem && dataValidade)
+                        urlImagem && dataValidade && categoria.codigo > 0)
                     {
                         //alterar o produto
-                        const categ = new Categoria(categoria.codigo)
                         const produto = new Produto(codigo,
                             descricao, precoCusto, precoVenda,
-                            qtdEstoque,urlImagem,dataValidade,categ);
+                            qtdEstoque,urlImagem,dataValidade,categValid);
                         produto.alterar()
                         .then(()=>{
                             resposta.status(200).json({

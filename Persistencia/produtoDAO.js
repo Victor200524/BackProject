@@ -19,7 +19,7 @@ export default class ProdutoDAO {
                 prod_precoVenda DECIMAL(10,2) NOT NULL,
                 prod_qtdEstoque INT NOT NULL DEFAULT 0,
                 prod_urlImagem VARCHAR(250),
-                prod_dataValidade DATE NOT NULL,
+                prod_dataValidade VARCHAR(11) NOT NULL,
                 fk_codigo_cat INT NOT NULL,
                 CONSTRAINT pk_produto PRIMARY KEY(prod_codigo),
                 CONSTRAINT fk_categoria FOREIGN KEY(fk_codigo_cat) REFERENCES categoria(cat_codigo)
@@ -37,7 +37,7 @@ export default class ProdutoDAO {
         if (produto instanceof Produto) {
             const conexao = await conectar();
             const sql = `INSERT INTO produto(prod_descricao,prod_precoCusto,prod_precoVenda,prod_qtdEstoque,prod_urlImagem,prod_dataValidade,fk_codigo_cat)
-                values(?,?,?,?,?,str_to_date(?,'%d/%m/%Y'),?)
+                values(?,?,?,?,?,?,?)
             `;
             let parametros = [
                 produto.descricao,
@@ -56,7 +56,7 @@ export default class ProdutoDAO {
     async alterar(produto) {
         if (produto instanceof Produto) {
             const conexao = await conectar();
-            const sql = `UPDATE produto SET prod_descricao=?,prod_precoCusto=?,prod_precoVenda=?,prod_qtdEstoque=?,prod_urlImagem=?,prod_dataValidade=str_to_date(?,'%d/%m/%Y'),fk_codigo_cat = ?
+            const sql = `UPDATE produto SET prod_descricao=?,prod_precoCusto=?,prod_precoVenda=?,prod_qtdEstoque=?,prod_urlImagem=?,prod_dataValidade=?,fk_codigo_cat = ?
                 WHERE prod_codigo = ?
             `;
             let parametros = [

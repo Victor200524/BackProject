@@ -57,7 +57,7 @@ export default class ProdutoDAO {
         if (produto instanceof Produto) {
             const conexao = await conectar();
             const sql = `UPDATE produto SET prod_descricao=?,prod_precoCusto=?,prod_precoVenda=?,prod_qtdEstoque=?,prod_rlImagem=?,prod_dataValidade=str_to_date(?,'%d/%m/%Y'),fk_codigo_cat = ?
-                WHERE codigo = ?
+                WHERE prod_codigo = ?
             `;
             let parametros = [
                 produto.descricao,

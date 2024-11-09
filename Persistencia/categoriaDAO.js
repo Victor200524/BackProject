@@ -28,10 +28,10 @@ export default class CategoriaDAO{
     async gravar(categoria){
         if(categoria instanceof Categoria){
             const conexao = conectar();
-            const sql = `INSERT INTO categoria(cat_descricao) VALUES ?`;
+            const sql = `INSERT INTO categoria(cat_descricao) VALUES (?)`;
             const parametros = [categoria.descricao];
-            categoria.codigo[0].insertId;
-            await conexao.execute(sql,parametros);
+            const resultado = await conexao.release(sql,parametros);
+            categoria.codigo = resultado[0].insertId;
             await conexao.release();
         }
     }
@@ -39,17 +39,19 @@ export default class CategoriaDAO{
         if(categoria instanceof Categoria){
             const conexao = conectar();
             const sql = `UPDATE categoria SET cat_descricao = ?`;
-            const parametros = [categoria.descricao];
+            const parametros = [categoria.descricao, categoria.codigo];
             await conexao.execute(sql,parametros);
             await conexao.release();
         }
     }
     async excluir(categoria){
-        const conexao = conectar();
-        const sql = `DELETE FROM categoria WHERE cat_codigo = ?`;
-        const parametros = [categoria.descricao];
-        await conexao.execute(sql,parametros);
-        await conexao.release();
+        if (categoria instanceof Categoria){
+            const conexao = await conectar();
+            const sql = "DELETE FROM categoria WHERE cat_codigo = ?";
+            const parametros = [categoria.codigo];
+            await conexao.execute(sql,parametros);
+            await conexao.release();
+        }
     }
     async consultar(termo){ 
         let sql = "";
@@ -60,7 +62,7 @@ export default class CategoriaDAO{
             parametros.push("%"+termo+"%");
         }
         else{
-            sql = "SELECT * FROM categoria WHERE cat_codigo LIKE ? ORDER BY cat_descricao";
+            sql = "SELECT * FROM categoria WHERE cat_codigo = ? ORDER BY cat_descricao";
             parametros.push(termo);
         }
         const conexao = await conectar();

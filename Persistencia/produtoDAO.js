@@ -74,26 +74,26 @@ export default class ProdutoDAO {
         }
     }
     async consultar(termo) {
-        //recuperar as linhas da tabela produto e transformá-las de volta em produtos
         const conexao = await conectar();
         let sql = "";
         let parametros = [];
-        if (isNaN(parseInt(termo))) { // produto p -> esse p é o apelido da tabela chamada produto
+        
+        if (isNaN(parseInt(termo))) { // se o termo não for um número, busca pela descrição
             sql = `SELECT * FROM produto p 
-                    INNER JOIN categoria ON prod_fk_codigo_cat = cat_codigo 
-                    WHERE prod_descricao LIKE ?`;
+                    INNER JOIN categoria ON p.fk_codigo_cat = categoria.cat_codigo 
+                    WHERE p.prod_descricao LIKE ?`;
             parametros = ['%' + termo + '%'];
-        }
-        else {
+        } else { // se o termo for um número, busca pelo código
             sql = `SELECT * FROM produto p
-                    INNER JOIN categoria ON prod_fk_codigo_cat = cat_codigo
-                    WHERE prod_codigo LIKE ?`;
+                    INNER JOIN categoria ON p.fk_codigo_cat = categoria.cat_codigo
+                    WHERE p.prod_codigo = ?`;
             parametros = [termo];
         }
+        
         const [linhas, campos] = await conexao.execute(sql, parametros);
         let listaProdutos = [];
         for (const linha of linhas) {
-            const categoria = new Categoria(linha['cat_codigo'],linha["cat_descricao"]);
+            const categoria = new Categoria(linha['cat_codigo'], linha["cat_descricao"]);
             const produto = new Produto(
                 linha['prod_codigo'],
                 linha['prod_descricao'],
@@ -109,6 +109,7 @@ export default class ProdutoDAO {
         await conexao.release();
         return listaProdutos;
     }
+    
 
     async excluir(produto) {
         if (produto instanceof Produto) {

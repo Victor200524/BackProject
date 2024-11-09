@@ -148,92 +148,87 @@ export default class ProdutoCtrl{
         }
     }
 
-    excluir(requisicao, resposta){
+    excluir(requisicao, resposta) {
         //preparar o destinatário que a resposta estará no formato JSON
         resposta.type("application/json");
         //Verificando se o método da requisição é POST e conteúdo é JSON
-        if (requisicao.method == 'DELETE'){
+        if (requisicao.method == 'DELETE') {
             //o código será extraída da URL (padrão REST)
             const codigo = requisicao.params.codigo;
             //pseudo validação
-            if (codigo > 0)
-            {
+            if (codigo > 0) {
                 //alterar o produto
                 const produto = new Produto(codigo);
                 produto.excluir()
-                .then(()=>{
-                    resposta.status(200).json({
-                        "status":true,
-                        "mensagem":"Produto excluído com sucesso!",
+                    .then(() => {
+                        resposta.status(200).json({
+                            "status": true,
+                            "mensagem": "Produto excluído com sucesso!",
+                        });
+                    })
+                    .catch((erro) => {
+                        resposta.status(500).json({
+                            "status": false,
+                            "mensagem": "Não foi possível excluir o produto: " + erro.message
+                        });
                     });
-                })
-                .catch((erro)=>{
-                    resposta.status(500).json({
-                        "status":false,
-                        "mensagem":"Não foi possível excluir o produto: " + erro.message
-                    });
-                });
             }
-            else
-            {
+            else {
                 resposta.status(400).json(
                     {
-                        "status":false,
-                        "mensagem":"Informe um código válido de um produto conforme documentação da API."
+                        "status": false,
+                        "mensagem": "Informe um código válido de um produto conforme documentação da API."
                     }
                 );
             }
 
         }
-        else
-        {
+        else {
             resposta.status(400).json({
-                "status":false,
-                "mensagem":"Requisição inválida! Consulte a documentação da API."
+                "status": false,
+                "mensagem": "Requisição inválida! Consulte a documentação da API."
             });
 
         }
     }
 
-    consultar(requisicao, resposta){
+    consultar(requisicao, resposta) {
         resposta.type("application/json");
-        if (requisicao.method=="GET"){
+        if (requisicao.method == "GET") {
             let codigo = requisicao.params.codigo;
             //evitar que código tenha valor undefined
-            if (isNaN(codigo)){
+            if (isNaN(codigo)) {
                 codigo = "";
             }
 
             const produto = new Produto();
             //método consultar retorna uma lista de produtos
             produto.consultar(codigo)
-            .then((listaProdutos) =>{
-                resposta.status(200).json(listaProdutos
-                    /*{
-                        "status": true,
-                        "listaProdutos": listaProdutos
-                    }*/
-                );
-            })
-            .catch((erro) => {
-                resposta.status(500).json(
-                    {
-                        "status":false,
-                        "mensagem":"Erro ao consultar produtos: " + erro.message    
-                    }
-                );
-            });
+                .then((listaProdutos) => {
+                    resposta.status(200).json(listaProdutos
+                        /*{
+                            "status": true,
+                            "listaProdutos": listaProdutos
+                        }*/
+                    );
+                })
+                .catch((erro) => {
+                    resposta.status(500).json(
+                        {
+                            "status": false,
+                            "mensagem": "Erro ao consultar produtos: " + erro.message
+                        }
+                    );
+                });
 
         }
-        else
-        {
+        else {
             resposta.status(400).json(
                 {
-                    "status":false,
-                    "mensagem":"Requisição inválida! Consulte a documentação da API."
+                    "status": false,
+                    "mensagem": "Requisição inválida! Consulte a documentação da API."
                 }
             );
         }
     }
-
 }

@@ -66,8 +66,8 @@ export default class ProdutoDAO {
                 produto.qtdEstoque,
                 produto.urlImagem,
                 produto.dataValidade,
-                produto.codigo,
-                produto.categoria.codigo
+                produto.categoria.codigo,
+                produto.codigo
             ]; //dados do produto
             await conexao.execute(sql, parametros);
             await conexao.release(); //libera a conexão

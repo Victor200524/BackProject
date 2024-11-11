@@ -90,8 +90,8 @@ export default class ProdutoCtrl{
             const categoria = requisicao.body.categoria;
             //validação de regra de negócio
             const categValid = new Categoria(categoria.codigo);
-            categValid.consultar(categoria.codigo).then((listaCategorias)=>{
-                if(listaCategorias.length > 0){
+            categValid.consultar(categoria.codigo).then((lista)=>{
+                if(lista.length > 0){
                     //pseudo validação
                     if (codigo > 0 && descricao && precoCusto > 0 &&
                         precoVenda > 0 && qtdEstoque >= 0 &&

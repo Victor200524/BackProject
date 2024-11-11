@@ -87,20 +87,18 @@ export default class ProdutoCtrl{
             const qtdEstoque = requisicao.body.qtdEstoque;
             const urlImagem  = requisicao.body.urlImagem;
             const dataValidade = requisicao.body.dataValidade;
-            const categoria = requisicao.body.codigo;
+            const categoria = requisicao.body.categoria;
             //validação de regra de negócio
             const categValid = new Categoria(categoria.codigo);
-            categValid.consultar(categoria.codigo).then((lista)=>{
-                if(lista.length > 0){
+            categValid.consultar(categoria.codigo).then((listaCategorias)=>{
+                if(listaCategorias.length > 0){
                     //pseudo validação
                     if (codigo > 0 && descricao && precoCusto > 0 &&
                         precoVenda > 0 && qtdEstoque >= 0 &&
                         urlImagem && dataValidade && categoria.codigo > 0)
                     {
                         //alterar o produto
-                        const produto = new Produto(codigo,
-                            descricao, precoCusto, precoVenda,
-                            qtdEstoque,urlImagem,dataValidade,categValid);
+                        const produto = new Produto(codigo, descricao, precoCusto, precoVenda, qtdEstoque,urlImagem,dataValidade,categValid);
                         produto.alterar()
                         .then(()=>{
                             resposta.status(200).json({

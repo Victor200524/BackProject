@@ -87,7 +87,7 @@ export default class ProdutoCtrl{
             const qtdEstoque = requisicao.body.qtdEstoque;
             const urlImagem  = requisicao.body.urlImagem;
             const dataValidade = requisicao.body.dataValidade;
-            const categoria = requisicao.body.categoria.codigo;
+            const categoria = requisicao.body.codigo;
             //validação de regra de negócio
             const categValid = new Categoria(categoria.codigo);
             categValid.consultar(categoria.codigo).then((lista)=>{

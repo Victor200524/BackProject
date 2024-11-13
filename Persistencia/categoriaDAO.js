@@ -58,11 +58,11 @@ export default class CategoriaDAO{
         let parametros = [];
         // aqui estou verificando se aquela categoria realmente existe
         if(isNaN(parseInt(termo))){
-            sql = "SELECT * FROM categoria WHERE cat_descricao LIKE ? ORDER BY cat_descricao";
+            sql = "SELECT * FROM categoria WHERE cat_descricao LIKE ? ORDER BY cat_codigo";
             parametros.push("%"+termo+"%");
         }
         else{
-            sql = "SELECT * FROM categoria WHERE cat_codigo = ? ORDER BY cat_descricao";
+            sql = "SELECT * FROM categoria WHERE cat_codigo = ? ORDER BY cat_codigo";
             parametros.push(termo);
         }
         const conexao = await conectar();

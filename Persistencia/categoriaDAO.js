@@ -32,7 +32,7 @@ export default class CategoriaDAO{
             let parametros = [categoria.descricao];
             const resultado = await conexao.release(sql,parametros);
             categoria.codigo = resultado[0].insertId;
-            await conexao.release();
+            //await conexao.release();
         }
     }
     async editar(categoria){

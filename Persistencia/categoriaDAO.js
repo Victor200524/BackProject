@@ -29,7 +29,7 @@ export default class CategoriaDAO{
         if(categoria instanceof Categoria){
             const conexao = conectar();
             const sql = `INSERT INTO categoria(cat_descricao) VALUES (?)`;
-            const parametros = [categoria.descricao];
+            let parametros = [categoria.descricao];
             const resultado = await conexao.release(sql,parametros);
             categoria.codigo = resultado[0].insertId;
             await conexao.release();
@@ -39,7 +39,7 @@ export default class CategoriaDAO{
         if(categoria instanceof Categoria){
             const conexao = conectar();
             const sql = `UPDATE categoria SET cat_descricao = ?`;
-            const parametros = [categoria.descricao, categoria.codigo];
+            let parametros = [categoria.descricao, categoria.codigo];
             await conexao.execute(sql,parametros);
             await conexao.release();
         }
@@ -49,7 +49,7 @@ export default class CategoriaDAO{
             const conexao = await conectar();
             const sql = "DELETE FROM categoria WHERE cat_codigo = ?";
             const parametros = [categoria.codigo];
-            await conexao.execute(sql,parametros);
+            await conexao.execute(sql, parametros);
             await conexao.release();
         }
     }

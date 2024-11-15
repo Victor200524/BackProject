@@ -27,7 +27,7 @@ export default class CategoriaDAO{
 
     async gravar(categoria){
         if(categoria instanceof Categoria){
-            const conexao = conectar();
+            const conexao = await conectar();
             const sql = `INSERT INTO categoria(cat_descricao) VALUES (?)`;
             let parametros = [categoria.descricao];
             const resultado = await conexao.release(sql,parametros);
@@ -37,7 +37,7 @@ export default class CategoriaDAO{
     }
     async editar(categoria){
         if(categoria instanceof Categoria){
-            const conexao = conectar();
+            const conexao = await conectar();
             const sql = `UPDATE categoria SET cat_descricao = ?`;
             let parametros = [categoria.descricao, categoria.codigo];
             await conexao.execute(sql,parametros);
